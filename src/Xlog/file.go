@@ -20,17 +20,17 @@ func NewFile(level int,filename string,module string)Xlog{
 }
 
 func (c *XFile)LogDebug(xfmt string, args ...interface{}) {
-	levelStr :=getLevelStr(XlogLevelDebug)
-	t := getTimeStr()
-	moduel:=c.module
-	filename,funcName,lineNo :=getlineInfo(2)
-	data :=fmt.Sprintf(xfmt,args...)      					//args 需要加...展开 不然会有多余数据
-	fmt.Printf("%s %v %v (%s:%s:%d) %s\n ",t,levelStr,moduel,filename,funcName,lineNo,data)
+		levelStr :=getLevelStr(XlogLevelDebug)
+		t := getTimeStr()
+		moduel:=c.module
+		filename,funcName,lineNo :=getlineInfo(2)
+		data :=fmt.Sprintf(xfmt,args...)      					//args 需要加...展开 不然会有多余数据
+		fmt.Printf("%s %v %v (%s:%s:%d) %s\n",t,levelStr,moduel,filename,funcName,lineNo,data)
 }
 func (c *XFile)LogTrace(xfmt string, args ...interface{}) {
 	//levelStr :=getLevelStr(XlogLevelTrace)
 	t := getTimeStr()
-	fmt.Printf("%v log trace of file\n",t)
+	fmt.Printf("%s log trace of file\n",t)
 }
 func (c *XFile)LogInfo(xfmt string, args ...interface{}) {
 	fmt.Printf("log info of file\n")

@@ -1,49 +1,87 @@
 package Xlog
 
 import (
-	"fmt"
+	"os"
 )
 
 type XFile struct {
-	level int
+	*LogBase
 	filename string
-	module string
+	file     *os.File
 }
 
-func NewFile(level int,filename string,module string)Xlog{
-	logger :=&XFile{
-		level:level,
-		filename:filename,
-		module:module,
+func NewFile(level int, filename string, module string) Xlog {
+	logger := &XFile{
+		filename: filename,
+	}
+	logger.LogBase = &LogBase{
+		level:  level,
+		module: module,
 	}
 	return logger
 }
+func (c *XFile) Init() (err error) {
+	c.file, err = os.OpenFile(c.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0755)
+	//文件名,追加方式写入,创建文件,写入权限0755 rwxr-xr-xr
+	if err != nil {
+		return
+	}
+	return
+}
 
-func (c *XFile)LogDebug(xfmt string, args ...interface{}) {
-		levelStr :=getLevelStr(XlogLevelDebug)
-		t := getTimeStr()
-		moduel:=c.module
-		filename,funcName,lineNo :=getlineInfo(2)
-		data :=fmt.Sprintf(xfmt,args...)      					//args 需要加...展开 不然会有多余数据
-		fmt.Printf("%s %v %v (%s:%s:%d) %s\n",t,levelStr,moduel,filename,funcName,lineNo,data)
+func (c *XFile) LogDebug(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelDebug {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	//传入文件句柄
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)LogTrace(xfmt string, args ...interface{}) {
-	//levelStr :=getLevelStr(XlogLevelTrace)
-	t := getTimeStr()
-	fmt.Printf("%s log trace of file\n",t)
+func (c *XFile) LogTrace(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelTrace {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	logData.levelStr = "TRACE"
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)LogInfo(xfmt string, args ...interface{}) {
-	fmt.Printf("log info of file\n")
+func (c *XFile) LogInfo(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelInfo {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	logData.levelStr = "INFO"
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)LogWarn(xfmt string, args ...interface{}) {
-	fmt.Printf("log warn of file\n")
+func (c *XFile) LogWarn(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelWarn {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	logData.levelStr = "WARN"
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)LogError(xfmt string, args ...interface{}) {
-	fmt.Printf("log error of file\n")
+func (c *XFile) LogError(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelError {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	logData.levelStr = "ERROR"
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)LogFatal(xfmt string, args ...interface{}) {
-	fmt.Printf("log fatal of file\n")
+func (c *XFile) LogFatal(xfmt string, args ...interface{}) {
+	if c.level > ClogLevelFatal {
+		return
+	}
+	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	logData.levelStr = "FATAL"
+	c.writerlog(c.file, logData)
 }
-func (c *XFile)SetLevel(level int) {
-
+func (c *XFile) SetLevel(level int) {
+	c.level = level
+}
+func (c *XFile) Close() {
+	if c.file != nil {
+		c.file.Close()
+	}
 }

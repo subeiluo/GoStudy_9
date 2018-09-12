@@ -1,4 +1,5 @@
 package main
+
 //使用缓存的方式来读取文件
 import (
 	"bufio"
@@ -7,11 +8,11 @@ import (
 	"os"
 )
 
-func main(){
+func main() {
 	filename := "/Users/subeiluo/Downloads/mmp.log"
-	file,err :=os.Open(filename)
-	if err != nil{
-		fmt.Printf("open:%v failed, err:%v\n",filename,err)
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Printf("open:%v failed, err:%v\n", filename, err)
 		return
 	}
 
@@ -20,23 +21,23 @@ func main(){
 	}()
 	//等同于
 	//defer file.Close()
-	reader :=bufio.NewReader(file)
+	reader := bufio.NewReader(file)
 
 	var content []byte
 	var buf [4096]byte
 	for {
-		n, err := reader.Read(buf[:])        //判断文件是否报错,且报错不是文件结束
-		if err != nil && err !=io.EOF {
-			fmt.Printf("read:%s faile, err:%v\n",filename,err)
+		n, err := reader.Read(buf[:]) //判断文件是否报错,且报错不是文件结束
+		if err != nil && err != io.EOF {
+			fmt.Printf("read:%s faile, err:%v\n", filename, err)
 			return
 		}
-		if err ==io.EOF{                 //如果文件结算,break
+		if err == io.EOF { //如果文件结算,break
 			break
 		}
 		validBuf := buf[0:n]
 		//fmt.Printf("%s\n",string(validBuf))
-		content =append(content,validBuf...)      //将一个切片append到另一个切片中用... 展开
+		content = append(content, validBuf...) //将一个切片append到另一个切片中用... 展开
 	}
-	fmt.Printf("content:%s\n",content)
+	fmt.Printf("content:%s\n", content)
 
 }

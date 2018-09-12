@@ -1,39 +1,33 @@
 package Xlog
 
-import "time"
-
 const (
-	XlogLevelDebug =iota
-	XlogLevelTrace
-	XlogLevelInfo
-	XlogLevelWarn
-	XlogLevelError
-	XlogLevelfatal
+	ClogLevelDebug = iota
+	ClogLevelTrace
+	ClogLevelInfo
+	ClogLevelWarn
+	ClogLevelError
+	ClogLevelFatal
 )
 const (
-	XlogTypeFile =iota   //输出到文件
-	XlogTyoeConsole		 //输出到控制台
+	ClogTypeFile    = iota //输出到文件
+	ClogTypeConsole        //输出到控制台
 )
 
-func getLevelStr(level int)string{
+func getLevelStr(level int) string {
 	switch level {
-	case XlogLevelDebug:
+	case ClogLevelDebug:
 		return "DEBUG"
-	case XlogLevelTrace:
+	case ClogLevelTrace:
 		return "TRACE"
-	case XlogLevelInfo:
+	case ClogLevelInfo:
 		return "INFO"
-	case XlogLevelWarn:
+	case ClogLevelWarn:
 		return "WARN"
-	case XlogLevelError:
+	case ClogLevelError:
 		return "ERROR"
-	case XlogLevelfatal:
+	case ClogLevelFatal:
 		return "FATAL"
 	default:
 		return "UNKNOW"
 	}
-}
-func getTimeStr() string   {
-	str:=time.Now().Format("2006-01-02 15:04:05.000")
-	return str
 }

@@ -2,12 +2,16 @@ package Xlog
 
 import (
 	"os"
+	"sync"
 )
 
 type XFile struct {
 	*LogBase
 	filename string
 	file     *os.File
+
+	logChan chan *Output
+	wg *sync.WaitGroup
 }
 
 func NewFile(level int, filename string, module string) Xlog {
@@ -18,7 +22,15 @@ func NewFile(level int, filename string, module string) Xlog {
 		level:  level,
 		module: module,
 	}
+	logger.logChan =make(chan *Output, 10000)
+	go logger.synclog()
 	return logger
+}
+func(c *XFile)synclog(){
+	for data :=range c.logChan{
+		c.writerlog(c.file,data)
+	}
+	c.wg.Done()
 }
 func (c *XFile) Init() (err error) {
 	c.file, err = os.OpenFile(c.filename, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0755)
@@ -34,6 +46,11 @@ func (c *XFile) LogDebug(xfmt string, args ...interface{}) {
 		return
 	}
 	logData := c.fomatlogger(c.level, c.module, xfmt, args...)
+	select {
+		case c.logChan <- logData:
+	default:
+
+	}
 	//传入文件句柄
 	c.writerlog(c.file, logData)
 }
@@ -84,4 +101,5 @@ func (c *XFile) Close() {
 	if c.file != nil {
 		c.file.Close()
 	}
+
 }

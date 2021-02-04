@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	filename := "/Users/subeiluo/Downloads/mmp.log"
+	filename := "/Users/subeiluo/Downloads/ctext.txt"
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Printf("open:%v failed, err:%v\n", filename, err)
@@ -27,7 +27,7 @@ func main() {
 	var buf [4096]byte
 	for {
 		n, err := reader.Read(buf[:]) //判断文件是否报错,且报错不是文件结束
-		if err != nil && err != io.EOF {
+		if err != nil && err != io.EOF{
 			fmt.Printf("read:%s faile, err:%v\n", filename, err)
 			return
 		}

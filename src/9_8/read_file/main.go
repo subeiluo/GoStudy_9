@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	filename := "/Users/subeiluo/Downloads/mmp.log"
+	filename := "/Users/subeiluo/Downloads/ctext.txt"
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Printf("open:%v failed, err:%v\n", filename, err)
@@ -28,7 +28,7 @@ func main() {
 			fmt.Printf("read:%s faile, err:%v\n", filename, err)
 			return
 		}
-		if err == io.EOF { //如果文件结算,break
+		if err == io.EOF { //如果文件结束,break
 			break
 		}
 		validBuf := buf[0:n]

@@ -13,11 +13,11 @@ func logic(logger Xlog.Xlog) {
 	logger.LogWarn("warn log")
 	logger.LogError("error log")
 	logger.LogFatal("fatal log")
-	logger.LogDebug("debug log")
+	//logger.LogDebug("debug log")
 }
 
 func main() {
-	//filename,funcName,lineNo :=Xlog.GetlineInfo(1)   //skip的值根据代码的层数深度来确定 如main 是1 xlog.GetlineInfo是2 向下判断
+	//filename,funcName,lineNo :=Xlog.   //skip的值根据代码的层数深度来确定 如main 是1 xlog.GetlineInfo是2 向下判断
 	//fmt.Printf("filename:%s funcName:%s line:%d\n",filename,funcName,lineNo)
 	var logTypeStr string
 	flag.StringVar(&logTypeStr, "type", "file", "please input logger type")
@@ -33,6 +33,7 @@ func main() {
 	logger := Xlog.NewXlog(logType, Xlog.ClogLevelDebug,
 		"/Users/subeiluo/Downloads/logtest.log",
 		"xlog_example")
+	//判断初始化是否正常
 	err := logger.Init()
 	if err != nil {
 		fmt.Printf("logger init failed\n")

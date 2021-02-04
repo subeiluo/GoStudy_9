@@ -31,11 +31,12 @@ func getTimeStr() string {
 	return str
 }
 
-func (l *LogBase) fomatlogger(level int, module string, xfmt string, args ...interface{}) *Output {
+func (l *LogBase) fomatlogger(level int, module string, xfmt string, args...interface{}) *Output {
 	levelStr := getLevelStr(level)
 	t := getTimeStr()
 	moduel := module
 	filename, funcName, lineNo := getlineInfo(3)
+	//skip的值根据代码的层数深度来确定 如main 是1 xlog.GetlineInfo是2 向下判断
 	data := fmt.Sprintf(xfmt, args...) //args 需要加...展开 不然会有多余数据
 
 	return &Output{

@@ -16,7 +16,7 @@ func NewXconsole(level int, module string) Xlog {
 	}
 	return logger
 }
-func (c *Xconsole) Init() error {
+func (c *Xconsole) Init()(err error) {
 	return nil
 }
 func (c *Xconsole) LogDebug(xfmt string, args ...interface{}) {

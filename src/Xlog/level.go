@@ -1,7 +1,7 @@
 package Xlog
 
 const (
-	ClogLevelDebug = iota
+	ClogLevelDebug = iota  //0
 	ClogLevelTrace
 	ClogLevelInfo
 	ClogLevelWarn
